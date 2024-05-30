@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import PostForm from "../components/PostForm";
 import TModal from "../components/UI/modal/TModal";
 import TButton from "../components/UI/button/TButton";
@@ -8,10 +8,10 @@ import {getPageCount} from "../utils/pages";
 import PostFilter from "../components/PostFilter";
 import PostList from "../components/PostList";
 import {usePosts} from "../hooks/usePosts";
-import TPagination from "../components/UI/pagination/TPagination";
 import PostApi from "../Api/PostApi";
 import {useSearchParams} from "react-router-dom";
 import {removeNullFields} from "../utils/obj";
+import {useObserverIntersecting} from "../hooks/useObserver";
 
 function Posts() {
     let [searchParams, setSearchParams] = useSearchParams();
@@ -24,17 +24,26 @@ function Posts() {
     })
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
     const [totalPages, setTotalPages] = React.useState(0)
-    const [limit, _] = React.useState(10)
-    const [page, setPage] = React.useState(parseInt(searchParams.get('page')) || 1)
+    const [limit] = React.useState(10)
+    const [page, setPage] = React.useState(1)
+
+    const listElement = useRef()
+
     const [fetchPost, isPostLoading, errorPostLoading] = useFetching(async () => {
         const response = await PostApi.get(limit, page);
-        setPosts(response.data)
+        setPosts([...posts, ...response.data])
         setTotalPages(getPageCount(response.totalCount, limit))
     })
 
+    useObserverIntersecting(
+        listElement,
+        isPostLoading,
+        () => page < totalPages,
+        () => setPage(page + 1)
+    )
+
     useEffect(() => {
         fetchPost()
-        setSearchParams({...searchParams, page: page});
     }, [page]);
 
     useEffect(() => {
@@ -62,10 +71,9 @@ function Posts() {
         </TModal>
         <PostFilter filter={filter} setFilter={setFilter}/>
         {errorPostLoading && <h1>Ошибка загрузки ${errorPostLoading}</h1>}
-        {isPostLoading
-            ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><TLoader/></div>
-            : <PostList posts={sortedAndSearchedPosts} title="Список посто" remove={removePost}/>}
-        <TPagination totalPages={totalPages} page={page} setPage={setPage}/>
+        <PostList posts={sortedAndSearchedPosts} title="Список посто" remove={removePost}/>
+        {isPostLoading && <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><TLoader/></div>}
+        <div ref={listElement} style={{height: 50}}></div>
     </div>);
 }
 

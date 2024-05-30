@@ -16,7 +16,6 @@ const Post = () => {
 
     const [fetchPostComments, isPostCommentsLoading, errorPostCommentsLoading] = useFetching(async (id) => {
         const response = await PostApi.getComments(id);
-        console.log(response)
         setComments(response)
     })
 
