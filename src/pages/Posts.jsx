@@ -40,12 +40,6 @@ function Posts() {
     useEffect(() => {
         const newSearchParams = {...searchParams, ...filter};
         removeNullFields(newSearchParams);
-
-        for (let key in newSearchParams) {
-            if (!newSearchParams[key]) {
-                delete newSearchParams[key];
-            }
-        }
         setSearchParams(newSearchParams);
     }, [filter]);
 
