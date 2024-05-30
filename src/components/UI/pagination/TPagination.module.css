@@ -1,0 +1,15 @@
+.tPageWrapper {
+    margin-top: 30px;
+    display: flex;
+}
+
+.tPage {
+    padding: 10px;
+    border: 1px solid teal;
+    cursor: pointer;
+}
+
+.tPage.active {
+    border: 2px solid orange;
+    font-weight: bold;
+}
