@@ -10,15 +10,21 @@ import PostList from "../components/PostList";
 import {usePosts} from "../hooks/usePosts";
 import TPagination from "../components/UI/pagination/TPagination";
 import PostApi from "../Api/PostApi";
+import {useSearchParams} from "react-router-dom";
 
 function Posts() {
+    let [searchParams, setSearchParams] = useSearchParams();
+
     const [posts, setPosts] = React.useState([])
     const [modal, setModal] = React.useState(false)
-    const [filter, setFilter] = React.useState({sort: '', query: ''})
+    const [filter, setFilter] = React.useState({
+        sort: searchParams.get('sort') || '',
+        query: searchParams.get('query') || ''
+    })
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
     const [totalPages, setTotalPages] = React.useState(0)
-    const [limit, setLimit] = React.useState(10)
-    const [page, setPage] = React.useState(1)
+    const [limit, _] = React.useState(10)
+    const [page, setPage] = React.useState(parseInt(searchParams.get('page')) || 1)
     const [fetchPost, isPostLoading, errorPostLoading] = useFetching(async () => {
         const response = await PostApi.get(limit, page);
         setPosts(response.data)
@@ -27,7 +33,19 @@ function Posts() {
 
     useEffect(() => {
         fetchPost()
+        setSearchParams({...searchParams, page: page});
     }, [page]);
+
+    useEffect(() => {
+        const newSearchParams = {...searchParams, ...filter};
+
+        for (let key in newSearchParams) {
+            if (!newSearchParams[key]) {
+                delete newSearchParams[key];
+            }
+        }
+        setSearchParams(newSearchParams);
+    }, [filter]);
 
     const addNewPost = (newPost) => {
         setPosts([...posts, newPost])
