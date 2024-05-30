@@ -39,7 +39,7 @@ const Post = () => {
             {isPostCommentsLoading
                 ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><TLoader/></div>
                 : comments.map(comment =>
-                    <div style={{marginTop: 15}}>
+                    <div key={comment.id} style={{marginTop: 15}}>
                         <h5>Комментарий {comment.id}</h5>
                         <h5>{comment.email}</h5>
                         <div>{comment.body}</div>
