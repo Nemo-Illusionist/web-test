@@ -25,7 +25,7 @@ const Post = () => {
     }, []);
 
     return (
-        <div>
+        <div className="App">
             {errorPostLoading && <h1>Ошибка загрузки поста {errorPostLoading}</h1>}
             {isPostLoading
                 ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><TLoader/></div>

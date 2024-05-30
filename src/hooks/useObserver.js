@@ -22,5 +22,11 @@ export const useObserverIntersecting = (ref, isLoading, canLoad, callback) => {
             }
         })
         observer.current.observe(ref.current)
+
+        return () => {
+            if (observer.current) {
+                observer.current.disconnect()
+            }
+        }
     }, [isLoading])
 }
