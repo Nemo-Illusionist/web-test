@@ -23,6 +23,10 @@
     align-items: center;
 }
 
+.post__btn{
+    display: flex;
+}
+
 .post-enter {
     opacity: 0;
 }

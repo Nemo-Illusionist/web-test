@@ -11,6 +11,7 @@ import {usePosts} from "../hooks/usePosts";
 import TPagination from "../components/UI/pagination/TPagination";
 import PostApi from "../Api/PostApi";
 import {useSearchParams} from "react-router-dom";
+import {removeNullFields} from "../utils/obj";
 
 function Posts() {
     let [searchParams, setSearchParams] = useSearchParams();
@@ -38,6 +39,7 @@ function Posts() {
 
     useEffect(() => {
         const newSearchParams = {...searchParams, ...filter};
+        removeNullFields(newSearchParams);
 
         for (let key in newSearchParams) {
             if (!newSearchParams[key]) {
