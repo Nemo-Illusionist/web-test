@@ -7,7 +7,7 @@ const PostItem = (props) => {
 
     return (
         <div>
-            <div className="post">
+            <div className="post" onClick={() => navigate(`/posts/${props.post.id}`)}>
                 <div className="post__content">
                     <strong>{props.post.id}. {props.post.title}</strong>
                     <div>
@@ -15,10 +15,10 @@ const PostItem = (props) => {
                     </div>
                 </div>
                 <div className="post__btn">
-                    <TButton onClick={() => navigate(`/posts/${props.post.id}`)}>
-                        Открыть
-                    </TButton>
-                    <TButton onClick={() => props.remove(props.post)}>
+                    <TButton onClick={(e) => {
+                        e.stopPropagation();
+                        props.remove(props.post)
+                    }}>
                         Удалить
                     </TButton>
                 </div>

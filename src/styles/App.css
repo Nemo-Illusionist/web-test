@@ -21,6 +21,7 @@
     margin-top: 15px;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
 }
 
 .post__btn{
