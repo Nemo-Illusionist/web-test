@@ -38,7 +38,7 @@ function Posts() {
     useObserverIntersecting(
         listElement,
         isPostLoading,
-        () => page < totalPages,
+        page < totalPages,
         () => setPage(page + 1)
     )
 
